@@ -8,7 +8,7 @@
     "build": "node scripts/vite-cli.mjs build",
     "build:dev": "node scripts/vite-cli.mjs build --mode development",
     "preview": "node scripts/vite-cli.mjs preview",
-    "lint": "eslint src vite.config.ts eslint.config.js",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit --pretty false",
     "test": "vitest run",
     "format": "prettier --write ."
