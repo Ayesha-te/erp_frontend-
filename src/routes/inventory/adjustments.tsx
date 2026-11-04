@@ -21,12 +21,12 @@ import {
 export const Route = createFileRoute("/inventory/adjustments")({
   head: () => ({
     meta: [
-      { title: "Stock Adjustments | Zekra Sweets ERP" },
+      { title: "Stock Adjustments | BakeHub" },
       {
         name: "description",
         content: "Post positive or negative stock adjustments with a full audit trail.",
       },
-      { property: "og:title", content: "Stock Adjustments | Zekra Sweets ERP" },
+      { property: "og:title", content: "Stock Adjustments | BakeHub" },
       {
         property: "og:description",
         content: "Post positive or negative stock adjustments with a full audit trail.",

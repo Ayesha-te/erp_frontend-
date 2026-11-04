@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings | Zekra Sweets ERP" },
+      { title: "Settings | BakeHub" },
       {
         name: "description",
         content: "Company settings, units, tax rates, payment methods and database controls.",
       },
-      { property: "og:title", content: "Settings | Zekra Sweets ERP" },
+      { property: "og:title", content: "Settings | BakeHub" },
       {
         property: "og:description",
         content: "Company settings, units, tax rates, payment methods and database controls.",
@@ -58,7 +58,7 @@ function Settings() {
   );
   return (
     <>
-      <PageHeader title="Settings" subtitle="Master configuration for the Zekra Sweets ERP" />
+      <PageHeader title="Settings" subtitle="Master configuration for the BakeHub" />
       {create && (
         <SettingsCreateDialog kind={create} open onOpenChange={(v) => !v && setCreate(null)} />
       )}

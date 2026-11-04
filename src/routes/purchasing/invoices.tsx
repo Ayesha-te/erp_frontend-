@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/purchasing/invoices")({
   head: () => ({
     meta: [
-      { title: "Purchase Invoices | Zekra Sweets ERP" },
+      { title: "Purchase Invoices | BakeHub" },
       {
         name: "description",
         content: "Record, post and track supplier purchase invoices and raw material receipts.",
       },
-      { property: "og:title", content: "Purchase Invoices | Zekra Sweets ERP" },
+      { property: "og:title", content: "Purchase Invoices | BakeHub" },
       {
         property: "og:description",
         content: "Record, post and track supplier purchase invoices and raw material receipts.",

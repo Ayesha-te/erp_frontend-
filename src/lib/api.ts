@@ -1,5 +1,5 @@
 export const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || "https://erp-api.stride-events.net/api"
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api"
 ).replace(/\/+$/, "");
 export const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN === "true";
 
@@ -36,6 +36,8 @@ export const API_ENDPOINTS = {
   clearFinishedGoods: "/inventory/stock-transactions/clear-finished-goods/",
   openingRawMaterial: "/inventory/stock-transactions/opening-raw-material/",
   purchases: "/purchases/",
+  scanReceipt: "/purchases/scan-receipt/",
+  reorderAlerts: "/reorder-alerts/",
   recipes: "/recipes/",
   productionBatches: "/production-batches/",
   materialTransfers: "/material-transfers/",
@@ -86,6 +88,27 @@ export function clearApiTokens() {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
+const BAKERY_CODE_KEY = "bakehub.bakery";
+const BAKERY_NAME_KEY = "bakehub.bakeryName";
+
+export function getBakeryCode() {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(BAKERY_CODE_KEY) || "";
+}
+export function getBakeryName() {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(BAKERY_NAME_KEY) || "";
+}
+export function setBakery(code: string, name?: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(BAKERY_CODE_KEY, code.trim().toLowerCase());
+  if (name !== undefined) localStorage.setItem(BAKERY_NAME_KEY, name);
+}
+export function clearBakeryName() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(BAKERY_NAME_KEY);
+}
+
 export function apiUrl(path = "") {
   const normalizedPath = path.startsWith("/") ? path.slice(1) : path;
   return normalizedPath ? `${API_BASE_URL}/${normalizedPath}` : API_BASE_URL;
@@ -105,7 +128,7 @@ async function refreshAccessToken() {
     if (!refresh) throw new Error("Your session has expired. Please sign in again.");
     const response = await fetch(apiUrl(API_ENDPOINTS.auth.refresh), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Bakery": getBakeryCode() },
       body: JSON.stringify({ refresh }),
     });
     if (!response.ok) {
@@ -126,12 +149,17 @@ export async function apiFetch(path: string, init?: ApiRequestInit) {
   const useAuth = init?.auth !== false;
   const { auth: _auth, idempotent = false, ...requestInit } = init ?? {};
 
-  if (init?.body && !headers.has("Content-Type")) {
+  if (init?.body && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 
   if (idempotent && !headers.has("Idempotency-Key")) {
     headers.set("Idempotency-Key", crypto.randomUUID());
+  }
+
+  if (!headers.has("X-Bakery")) {
+    const code = getBakeryCode();
+    if (code) headers.set("X-Bakery", code);
   }
 
   if (useAuth && !headers.has("Authorization")) {

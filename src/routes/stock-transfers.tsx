@@ -15,13 +15,13 @@ import { API_ENDPOINTS, apiJson, getApiTokens } from "@/lib/api";
 export const Route = createFileRoute("/stock-transfers")({
   head: () => ({
     meta: [
-      { title: "Stock Transfers | Zekra Sweets ERP" },
+      { title: "Stock Transfers | BakeHub" },
       {
         name: "description",
         content:
           "Dispatch and receive finished goods between warehouses, branches, shops and vans.",
       },
-      { property: "og:title", content: "Stock Transfers | Zekra Sweets ERP" },
+      { property: "og:title", content: "Stock Transfers | BakeHub" },
       {
         property: "og:description",
         content:

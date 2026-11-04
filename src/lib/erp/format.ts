@@ -2,7 +2,8 @@ export const money = (n: number, dp = 2) =>
   (n < 0 ? "-" : "") +
   Math.abs(n).toLocaleString("en-AE", { minimumFractionDigits: dp, maximumFractionDigits: dp });
 
-export const aed = (n: number, dp = 2) => "AED " + money(n, dp);
+const CURRENCY = (import.meta.env.VITE_CURRENCY as string | undefined) || "AED";
+export const aed = (n: number, dp = 2) => CURRENCY + " " + money(n, dp);
 
 export const qty = (n: number) =>
   n.toLocaleString("en-AE", { maximumFractionDigits: 3, minimumFractionDigits: 0 });

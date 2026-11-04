@@ -34,12 +34,12 @@ import {
 export const Route = createFileRoute("/inventory/finished-goods")({
   head: () => ({
     meta: [
-      { title: "Finished Goods Inventory | Zekra Sweets ERP" },
+      { title: "Finished Goods Inventory | BakeHub" },
       {
         name: "description",
         content: "Combined finished goods inventory, valuation and location stock.",
       },
-      { property: "og:title", content: "Finished Goods Inventory | Zekra Sweets ERP" },
+      { property: "og:title", content: "Finished Goods Inventory | BakeHub" },
       {
         property: "og:description",
         content: "Combined finished goods inventory, valuation and location stock.",

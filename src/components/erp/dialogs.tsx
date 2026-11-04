@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Plus, Trash2, Upload, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,14 +91,46 @@ function LineTable({ head, children }: { head: string[]; children: React.ReactNo
 }
 
 /* ------------------------- Purchase Invoice ------------------------- */
+export type PurchasePrefill = {
+  supplierId?: string;
+  notes?: string;
+  lines: { itemId: string; qty: number; rate: number }[];
+};
+
+type ScannedReceipt = {
+  supplier_name: string;
+  invoice_number: string;
+  invoice_date: string | null;
+  items: {
+    name: string;
+    quantity: number | null;
+    unit: string;
+    unit_price: number | null;
+    total: number | null;
+  }[];
+  grand_total: number | null;
+};
+
+const norm = (v: string) => v.toLowerCase().replace(/[^a-z0-9]/g, "");
+const similar = (a: string, b: string) => {
+  const x = norm(a);
+  const y = norm(b);
+  return !!x && !!y && (x === y || x.includes(y) || y.includes(x));
+};
+
 export function PurchaseInvoiceDialog({
   open,
   onOpenChange,
+  prefill,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
+  prefill?: PurchasePrefill | null;
 }) {
   const { db, update, can, refreshFromBackend } = useErp();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [scanning, setScanning] = useState(false);
+  const [aiBanner, setAiBanner] = useState<string | null>(null);
   const [supplierId, setSupplierId] = useState("");
   const [supInv, setSupInv] = useState("");
   const [date, setDate] = useState(today());
@@ -110,7 +142,93 @@ export function PurchaseInvoiceDialog({
   ]);
   const totals = docTotals(lines);
 
+  // Use a real raw-material warehouse from the backend when the default id does not exist.
+  useEffect(() => {
+    if (!open) return;
+    if (!db.locations.some((l) => l.id === warehouseId && l.type === "raw_warehouse")) {
+      const first = db.locations.find((l) => l.type === "raw_warehouse");
+      if (first) setWarehouseId(first.id);
+    }
+  }, [open, db.locations, warehouseId]);
+
+  // Pre-filled purchase order (from a Smart Reorder alert).
+  useEffect(() => {
+    if (!open || !prefill) return;
+    if (prefill.supplierId) setSupplierId(prefill.supplierId);
+    if (prefill.notes) setNotes(prefill.notes);
+    setLines(
+      prefill.lines.map((l) => {
+        const rm = db.rawMaterials.find((r) => r.id === l.itemId);
+        return {
+          itemId: l.itemId,
+          qty: l.qty,
+          unit: rm?.baseUnit ?? "",
+          rate: l.rate || rm?.standardCost || 0,
+          discount: 0,
+          taxRate: rm?.taxRate ?? 0,
+        };
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, prefill]);
+
+  const onReceiptChosen = async (file: File) => {
+    setScanning(true);
+    try {
+      const form = new FormData();
+      form.append("image", file);
+      const res = await apiJson<{ data: ScannedReceipt }>(API_ENDPOINTS.scanReceipt, {
+        method: "POST",
+        body: form,
+      });
+      const r = res.data;
+      const sup = db.suppliers.find((s) => similar(s.name, r.supplier_name));
+      if (sup) setSupplierId(sup.id);
+      if (r.invoice_number) setSupInv(r.invoice_number);
+      if (r.invoice_date && /^\d{4}-\d{2}-\d{2}$/.test(r.invoice_date)) {
+        setDate(r.invoice_date);
+        setDue(addDays(r.invoice_date, 15));
+      }
+      const unmatched: string[] = [];
+      const next = r.items
+        .filter((it) => it.name)
+        .map((it) => {
+          const rm = db.rawMaterials.find((m) => similar(m.name, it.name));
+          if (!rm) unmatched.push(it.name);
+          const qtyN = it.quantity ?? 0;
+          return {
+            itemId: rm?.id ?? "",
+            qty: qtyN,
+            unit: rm?.baseUnit ?? it.unit,
+            rate: it.unit_price ?? (qtyN && it.total ? it.total / qtyN : 0),
+            discount: 0,
+            taxRate: rm?.taxRate ?? 0,
+          };
+        });
+      if (next.length) setLines(next);
+      const notesBits = [
+        r.grand_total != null ? `Receipt total: ${r.grand_total}` : "",
+        !sup && r.supplier_name ? `Supplier on receipt: ${r.supplier_name}` : "",
+        unmatched.length ? `Unmatched items: ${unmatched.join(", ")}` : "",
+      ].filter(Boolean);
+      if (notesBits.length) setNotes(notesBits.join(" | "));
+      setAiBanner(
+        "AI extracted this data — please review before saving" +
+          (!sup && r.supplier_name ? ` (supplier "${r.supplier_name}" not found — select one)` : "") +
+          (unmatched.length ? ` (select material for: ${unmatched.join(", ")})` : ""),
+      );
+    } catch (error) {
+      toast.error("Receipt scan failed", {
+        description: error instanceof Error ? error.message : "Could not read the receipt.",
+      });
+    } finally {
+      setScanning(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
   const reset = () => {
+    setAiBanner(null);
     setSupplierId("");
     setSupInv("");
     setNotes("");
@@ -231,6 +349,46 @@ export function PurchaseInvoiceDialog({
         </>
       }
     >
+      <div className="flex flex-wrap items-center gap-3">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          data-testid="receipt-file-input"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void onReceiptChosen(f);
+          }}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="gap-1.5"
+          disabled={scanning}
+          onClick={() => fileRef.current?.click()}
+        >
+          {scanning ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Upload className="h-3.5 w-3.5" />
+          )}
+          {scanning ? "Reading receipt…" : "Upload Receipt"}
+        </Button>
+        <span className="text-[12px] text-muted-foreground">
+          Upload a photo of a supplier receipt and AI will fill in the form.
+        </span>
+      </div>
+      {aiBanner && (
+        <div
+          role="status"
+          className="flex items-start gap-2 rounded-md border border-yellow-300 bg-yellow-50 px-3 py-2 text-[13px] font-medium text-yellow-900"
+        >
+          <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{aiBanner}</span>
+        </div>
+      )}
       <FormGrid>
         <Field label="Supplier" required>
           <SearchSelect
@@ -287,7 +445,7 @@ export function PurchaseInvoiceDialog({
           "Raw Material",
           "Unit",
           "Quantity",
-          "Rate (AED)",
+          "Rate (" + (aed(0).split(" ")[0] || "AED") + ")",
           "Disc %",
           "Tax %",
           "Tax Amt",

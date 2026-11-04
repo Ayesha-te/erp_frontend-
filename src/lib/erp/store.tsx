@@ -219,7 +219,7 @@ export function ErpProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (username: string, password: string) => {
-      if (!db) return { ok: false, message: "Zekra Sweets ERP is still loading." };
+      if (!db) return { ok: false, message: "BakeHub is still loading." };
       try {
         const apiUser = await backendLogin(username.trim(), password);
         const apiDb = await loadBackendState(apiUser);
@@ -326,7 +326,7 @@ export function ErpProvider({ children }: { children: ReactNode }) {
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          Loading Zekra Sweets ERP…
+          Loading BakeHub…
         </div>
       </div>
     );

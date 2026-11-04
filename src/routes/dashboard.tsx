@@ -29,6 +29,7 @@ import {
 } from "recharts";
 import { PageBody, Panel } from "@/components/erp/Page";
 import { StatusBadge } from "@/components/erp/StatusBadge";
+import { ReorderAlerts } from "@/components/erp/ReorderAlerts";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -63,7 +64,7 @@ import { clearBackendBusinessData } from "@/lib/erp/backend";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard | Zekra Sweets ERP" },
+      { title: "Dashboard | BakeHub" },
       {
         name: "description",
         content: "Bakery operations, sales, production and inventory overview.",
@@ -310,6 +311,7 @@ function Dashboard() {
           )}
         </div>
       </header>
+      <ReorderAlerts />
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

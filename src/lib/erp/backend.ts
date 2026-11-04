@@ -1,4 +1,4 @@
-import { API_ENDPOINTS, apiJson, apiList, setApiTokens, type ApiTokens } from "@/lib/api";
+import { API_ENDPOINTS, apiJson, apiList, getBakeryCode, setApiTokens, setBakery, type ApiTokens } from "@/lib/api";
 import { buildSeed } from "./seed";
 import { modulesForRole } from "./permissions";
 import type { AppUser, Database, DocStatus, LedgerEntry, LocationType, ModuleKey, RoleKey } from "./types";
@@ -484,6 +484,8 @@ export async function backendLogin(email: string, password: string) {
     body: JSON.stringify({ email, password }),
   });
   setApiTokens({ access: response.access, refresh: response.refresh });
+  const bk = (response as { bakery?: { name?: string } }).bakery;
+  if (bk?.name) setBakery(getBakeryCode(), bk.name);
   return mapUser(response.user);
 }
 

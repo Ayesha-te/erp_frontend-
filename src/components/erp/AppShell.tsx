@@ -41,6 +41,7 @@ import { NAV, QUICK_CREATE, isGroup, type NavEntry } from "./nav";
 import { useErp } from "@/lib/erp/store";
 import { stockRows } from "@/lib/erp/ledger";
 import { toast } from "sonner";
+import { getBakeryName } from "@/lib/api";
 
 function useAlerts() {
   const { db, ledger } = useErp();
@@ -158,10 +159,10 @@ function Brand({ collapsed }: { collapsed?: boolean }) {
       {!collapsed && (
         <span className="min-w-0">
           <span className="block truncate text-[14px] font-semibold text-sidebar-accent-foreground">
-            Zekra Sweets ERP
+            BakeHub
           </span>
           <span className="block truncate text-[10px] text-sidebar-foreground/70">
-            Production • Inventory • Sales
+            {getBakeryName() || "Production • Inventory • Sales"}
           </span>
         </span>
       )}
@@ -366,7 +367,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     className="h-8 w-8"
                     aria-label="Help"
                     onClick={() =>
-                      toast.info("Zekra Sweets ERP", {
+                      toast.info("BakeHub", {
                         description:
                           "Use Quick Create to start documents. Post a document to move stock — every movement is written to the Stock Ledger.",
                       })

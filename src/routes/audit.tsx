@@ -21,12 +21,12 @@ import {
 export const Route = createFileRoute("/audit")({
   head: () => ({
     meta: [
-      { title: "Audit Trail | Zekra Sweets ERP" },
+      { title: "Audit Trail | BakeHub" },
       {
         name: "description",
         content: "Full audit log of created, posted, cancelled and reversed records.",
       },
-      { property: "og:title", content: "Audit Trail | Zekra Sweets ERP" },
+      { property: "og:title", content: "Audit Trail | BakeHub" },
       {
         property: "og:description",
         content: "Full audit log of created, posted, cancelled and reversed records.",

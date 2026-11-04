@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/purchasing/suppliers")({
   head: () => ({
     meta: [
-      { title: "Suppliers | Zekra Sweets ERP" },
+      { title: "Suppliers | BakeHub" },
       {
         name: "description",
         content: "Supplier master data, purchase history, ledgers and outstanding balances.",
       },
-      { property: "og:title", content: "Suppliers | Zekra Sweets ERP" },
+      { property: "og:title", content: "Suppliers | BakeHub" },
       {
         property: "og:description",
         content: "Supplier master data, purchase history, ledgers and outstanding balances.",

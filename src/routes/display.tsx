@@ -9,7 +9,7 @@ import { API_ENDPOINTS, apiJson, apiList } from "@/lib/api";
 export const Route = createFileRoute("/display")({
   head: () => ({
     meta: [
-      { title: "Stock Display | Zekra Sweets ERP" },
+      { title: "Stock Display | BakeHub" },
       { name: "description", content: "Current stock in hand by product and location." },
     ],
   }),

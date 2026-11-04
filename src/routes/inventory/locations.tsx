@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/inventory/locations")({
   head: () => ({
     meta: [
-      { title: "Locations | Zekra Sweets ERP" },
+      { title: "Locations | BakeHub" },
       {
         name: "description",
         content: "Warehouses, production floor, branches, retail shops and delivery vans.",
       },
-      { property: "og:title", content: "Locations | Zekra Sweets ERP" },
+      { property: "og:title", content: "Locations | BakeHub" },
       {
         property: "og:description",
         content: "Warehouses, production floor, branches, retail shops and delivery vans.",

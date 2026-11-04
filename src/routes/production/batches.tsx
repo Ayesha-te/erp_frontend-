@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/production/batches")({
   head: () => ({
     meta: [
-      { title: "Production Runs | Zekra Sweets ERP" },
+      { title: "Production Runs | BakeHub" },
       {
         name: "description",
         content: "Plan and complete production runs with automatic recipe scaling and costing.",
       },
-      { property: "og:title", content: "Production Runs | Zekra Sweets ERP" },
+      { property: "og:title", content: "Production Runs | BakeHub" },
       {
         property: "og:description",
         content: "Plan and complete production runs with automatic recipe scaling and costing.",

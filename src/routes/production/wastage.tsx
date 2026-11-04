@@ -21,12 +21,12 @@ import {
 export const Route = createFileRoute("/production/wastage")({
   head: () => ({
     meta: [
-      { title: "Wastage | Zekra Sweets ERP" },
+      { title: "Wastage | BakeHub" },
       {
         name: "description",
         content: "Record raw material and finished goods wastage with approval and ledger impact.",
       },
-      { property: "og:title", content: "Wastage | Zekra Sweets ERP" },
+      { property: "og:title", content: "Wastage | BakeHub" },
       {
         property: "og:description",
         content: "Record raw material and finished goods wastage with approval and ledger impact.",

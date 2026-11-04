@@ -21,12 +21,12 @@ import {
 export const Route = createFileRoute("/inventory/stock-ledger")({
   head: () => ({
     meta: [
-      { title: "Stock Ledger | Zekra Sweets ERP" },
+      { title: "Stock Ledger | BakeHub" },
       {
         name: "description",
         content: "Every inventory movement with source document, location and running balance.",
       },
-      { property: "og:title", content: "Stock Ledger | Zekra Sweets ERP" },
+      { property: "og:title", content: "Stock Ledger | BakeHub" },
       {
         property: "og:description",
         content: "Every inventory movement with source document, location and running balance.",

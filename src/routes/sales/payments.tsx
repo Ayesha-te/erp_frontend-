@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/sales/payments")({
   head: () => ({
     meta: [
-      { title: "Customer Payments | Zekra Sweets ERP" },
+      { title: "Customer Payments | BakeHub" },
       {
         name: "description",
         content: "Receive customer payments and allocate them across open sales invoices.",
       },
-      { property: "og:title", content: "Customer Payments | Zekra Sweets ERP" },
+      { property: "og:title", content: "Customer Payments | BakeHub" },
       {
         property: "og:description",
         content: "Receive customer payments and allocate them across open sales invoices.",

@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/production/transfers")({
   head: () => ({
     meta: [
-      { title: "Material Transfers | Zekra Sweets ERP" },
+      { title: "Material Transfers | BakeHub" },
       {
         name: "description",
         content: "Issue raw materials from the warehouse to the production floor.",
       },
-      { property: "og:title", content: "Material Transfers | Zekra Sweets ERP" },
+      { property: "og:title", content: "Material Transfers | BakeHub" },
       {
         property: "og:description",
         content: "Issue raw materials from the warehouse to the production floor.",

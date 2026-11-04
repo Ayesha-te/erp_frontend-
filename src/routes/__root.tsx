@@ -40,7 +40,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -83,14 +83,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Zekra Sweets ERP — Bakery Production & Inventory Suite" },
+      { title: "BakeHub — Bakery Production & Inventory Suite" },
       {
         name: "description",
         content:
-          "Zekra Sweets ERP: purchasing, production, inventory, sales and reporting for modern bakeries.",
+          "BakeHub: purchasing, production, inventory, sales and reporting for modern bakeries.",
       },
-      { name: "author", content: "Zekra Sweets ERP" },
-      { property: "og:title", content: "Zekra Sweets ERP" },
+      { name: "author", content: "BakeHub" },
+      { property: "og:title", content: "BakeHub" },
       {
         property: "og:description",
         content: "Production, Inventory, Sales & Operations Management for bakeries.",
@@ -108,7 +108,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap",
       },
     ],
   }),
