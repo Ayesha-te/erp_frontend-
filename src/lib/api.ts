@@ -1,5 +1,5 @@
 export const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api"
+  import.meta.env.VITE_API_BASE_URL || "https://erp2.stride-events.net/api"
 ).replace(/\/+$/, "");
 export const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN === "true";
 
